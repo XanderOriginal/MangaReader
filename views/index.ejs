@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MangaReader</title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+    <h1>MangaReader</h1>
+    <div class="search-container">
+        <form action="/search" method="GET">
+            <input type="text" name="query" placeholder="Search for manga..." required>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+    <div id="manga-container">
+
+        <% mangaData.data.forEach((manga) => { %>
+        <div class="manga-card">
+            
+            <% 
+                let coverFileName = "";
+                manga.relationships.forEach((rel) => {
+                    if (rel.type === "cover_art" && rel.attributes) {
+                        coverFileName = rel.attributes.fileName;
+                    }
+                });
+            %>
+            
+        
+            <% if (coverFileName) { %>
+                <img src="https://uploads.mangadex.org/covers/<%= manga.id %>/<%= coverFileName %>" alt="Cover">
+            <% } %>
+
+            <div class="manga-info">
+                <% 
+                   
+                    let titleObj = manga.attributes.title;
+                    let mangaTitle = titleObj.en || Object.values(titleObj)[0] || "No name available";
+        
+                    let descriptionObj = manga.attributes.description || {};
+                    let cleanDesc = descriptionObj.en || Object.values(descriptionObj)[0] || "No description available.";
+                    cleanDesc = cleanDesc.split("---")[0].split("**")[0].split("[Official")[0].trim();
+                    
+                    let tags = manga.attributes.tags
+                    .filter(tag => tag.attributes.group === "genre" || tag.attributes.group === "theme")
+                    .map(tag => tag.attributes.name.en) 
+                    .slice(0, 3) 
+                    .join(", "); 
+
+  
+                    let contentRating = manga.attributes.contentRating || "unknown";
+                 %>
+    
+                <h2><%= mangaTitle %></h2>
+                <p><strong>Tags:</strong> <%= tags || "No tags available" %></p>
+                <p><strong>Content Rating:</strong> <%= contentRating %></p>
+                <p><%= cleanDesc.replace(/\s+/g, " ").slice(0, 280) %><%= cleanDesc.length > 280 ? "..." : "" %></p>
+                <a class="read-link" href="/manga/<%= manga.id %>">View chapters</a>
+            </div>
+        </div>
+    <% }); %>
+    </div>
+</body>
+</html>
