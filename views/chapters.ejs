@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title><%= locals.manga?.title || 'Manga Reader' %> - <%= locals.chapter?.title || 'Chapter' %></title>
+	<link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="/styles/chapter.css">
+</head>
+<body>
+	<header>
+    <a href="/manga/<%= locals.manga?.id %>" aria-label="Back to manga">← <span class="back-label">Back</span></a>
+    <div class="details">
+        <h1><%= locals.manga?.title || 'Manga Reader' %></h1>
+        <p><%= locals.chapter?.title || locals.chapter?.name || 'Chapter' %></p>
+    </div>
+    
+    <% if (locals.prevChapter) { %>
+        <a href="/read/<%= locals.prevChapter %>" id="prev" class="nav-btn">‹ Prev</a>
+    <% } %>
+    
+    <select id="page" aria-label="Select page"></select>
+    
+    <% if (locals.nextChapter) { %>
+        <a href="/read/<%= locals.nextChapter %>" id="next" class="nav-btn">Next ›</a>
+    <% } %>
+</header>
+	<main>
+		<% const chapterPages = locals.chapter?.pages || locals.chapter?.images || locals.pages || []; %>
+		<section class="pages" id="pages">
+			<% if (chapterPages.length) { %>
+				<% chapterPages.forEach((item, index) => { %>
+					<img class="page" src="<%= locals.baseUrl %>/data/<%= locals.hash %>/<%= item %>" alt="Page <%= index + 1 %>" loading="<%= index ? 'lazy' : 'eager' %>">
+				<% }) %>
+			<% } else { %>
+				<div class="empty">No pages are available for this chapter.</div>
+			<% } %>
+		</section>
+		<nav>
+    			<% if (locals.prevChapter) { %>
+        			<a href="/read/<%= locals.prevChapter %>" id="prevBottom" class="nav-btn">← Prev Chapter</a>
+    			<% } %>
+    
+    			<% if (locals.nextChapter) { %>
+        			<a href="/read/<%= locals.nextChapter %>" id="nextBottom" class="nav-btn">Next Chapter →</a>
+    			<% } %>
+		</nav>
+	</main>
+	<script>
+		const images = [...document.querySelectorAll('.page')];
+    	const picker = document.getElementById('page');
+    
+    
+    	images.forEach((image, index) => picker.add(new Option(`Page ${index + 1}`, index)));
+    
+    
+    	picker.onchange = (event) => {
+        	const selected = Number(event.target.value);
+        	if (images[selected]) {
+            	images[selected].scrollIntoView({ behavior: 'smooth', block: 'start' });
+        	}
+    	};
+	</script>
+</body>
+</html>

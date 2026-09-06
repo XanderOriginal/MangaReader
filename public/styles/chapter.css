@@ -1,0 +1,17 @@
+* { box-sizing: border-box; }
+		:root { --color-background: #11151a; --color-surface: #252b30; --color-text: #f6f0e6; --color-text-muted: #d7dfd9; --color-text-subtle: #9baea7; --color-accent: #e5a84b; --color-accent-light: #f6c978; --color-border: #53615f; --color-border-subtle: #3d4949; --color-dark-text: #202528; }
+		body { margin: 0; background: var(--color-background); color: var(--color-text); font-family: Arial, sans-serif; }
+		header { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; gap: 16px; padding: 14px 5%; background: var(--color-surface); border-bottom: 1px solid var(--color-border-subtle); }
+		header a { color: var(--color-text-muted); text-decoration: none; }
+		.details { flex: 1; min-width: 0; }
+		h1, p { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+		h1 { font-size: 18px; }
+		p { margin-top: 4px; color: var(--color-text-subtle); font-size: 14px; }
+		button, select { padding: 8px 10px; border: 1px solid var(--color-border); border-radius: 4px; background: var(--color-surface); color: var(--color-text); cursor: pointer; }
+		main { max-width: 900px; margin: auto; padding: 24px 12px 40px; }
+		.pages { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+		.page { display: block; width: 100%; max-width: 850px; height: auto; background: var(--color-surface); }
+		.empty { padding: 70px 10px; color: var(--color-text-subtle); text-align: center; }
+		nav { display: flex; justify-content: space-between; max-width: 850px; margin: 22px auto 0; }
+		.nav-btn{ background: var(--color-accent); color: var(--color-dark-text); font-weight: bold; padding: 10px 14px; text-decoration: none; border-radius: 4px; }
+		@media (max-width: 600px) { header { padding: 12px; gap: 8px; } .back-label { display: none; } }

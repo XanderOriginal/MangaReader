@@ -1,7 +1,28 @@
+:root{
+    --color-background: #11151a;
+    --color-surface: #252b30;
+    --color-surface-raised: #2d3839;
+    --color-surface-dark: #202b2b;
+    --color-text: #f6f0e6;
+    --color-text-muted: #d7dfd9;
+    --color-text-subtle: #9baea7;
+    --color-accent: #e5a84b;
+    --color-accent-light: #f6c978;
+    --color-accent-cool: #8ed0c0;
+    --color-border: #53615f;
+    --color-border-subtle: #3d4949;
+    --color-light-surface: #f6f0e6;
+    --color-light-border: #ded7ca;
+    --color-light-hover: #e8dfcf;
+    --color-dark-text: #202528;
+    --color-background-mid: #1d2428;
+    --color-background-green: #13201f;
+}
+
 body{
-    background: linear-gradient(120deg, #11151a, #1d2428, #13201f, #11151a);
+    background: linear-gradient(120deg, var(--color-background), var(--color-background-mid), var(--color-background-green), var(--color-background));
     background-size: 300% 300%;
-    color: #f6f0e6;
+    color: var(--color-text);
     font-family: Georgia, 'Times New Roman', serif;
     margin: 0;
     padding: 20px;
@@ -21,7 +42,7 @@ body{
 }
 
 h1{
-    color: #f6c978;
+    color: var(--color-accent-light);
     font-size: 44px;
     text-align: center;
     letter-spacing: 1px;
@@ -42,29 +63,29 @@ h1{
 
 .search-container input,
 .search-container button{
-    border: 1px solid #53615f;
+    border: 1px solid var(--color-border);
     border-radius: 5px;
     font: inherit;
     padding: 12px 15px;
 }
 
 .search-container input{
-    background-color: #f6f0e6;
-    color: #202528;
+    background-color: var(--color-light-surface);
+    color: var(--color-dark-text);
     flex: 1;
     min-width: 0;
 }
 
 .search-container button{
-    background-color: #e5a84b;
-    border-color: #e5a84b;
-    color: #202528;
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-dark-text);
     cursor: pointer;
     font-weight: bold;
 }
 
 .search-container button:hover{
-    background-color: #f6c978;
+    background-color: var(--color-accent-light);
 }
 
 #manga-container{
@@ -77,8 +98,8 @@ h1{
 .manga-card{
     flex-direction: row;
     display: flex;
-    background-color: #252b30;
-    border: 1px solid #3d4949;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border-subtle);
     border-radius: 8px;
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
     padding: 20px;
@@ -88,8 +109,8 @@ h1{
 }
 
 .manga-card:hover{
-    background-color: #2d3839;
-    border-color: #78b5a7;
+    background-color: var(--color-surface-raised);
+    border-color: var(--color-accent-cool);
 }
 
 .manga-card img {
@@ -101,14 +122,14 @@ h1{
 }
 
 .manga-card h2{
-    color: #f6c978;
+    color: var(--color-accent-light);
     font-size: 20px;
     margin: 0 0 12px;
     text-align: left;
 }
 
 .manga-card p{
-    color: #d7dfd9;
+    color: var(--color-text-muted);
     font-size: 16px;
     margin-top: 5px;
     text-align: left;
@@ -127,13 +148,59 @@ h1{
 }
 
 .read-link{
-    color: #8ed0c0;
+    color: var(--color-accent-cool);
     font-weight: bold;
     margin-top: 12px;
 }
 
 .read-link:hover{
-    color: #f6c978;
+    color: var(--color-accent-light);
+}
+
+.dropdown{
+    position: relative;
+    width: 240px;
+}
+
+#dropdown-btn{
+    background-color: var(--color-accent);
+    border: 0;
+    border-radius: 5px;
+    color: var(--color-dark-text);
+    cursor: pointer;
+    font: inherit;
+    font-weight: bold;
+    padding: 12px 15px;
+    width: 100%;
+}
+
+.dropdown-content{
+    background-color: var(--color-light-surface);
+    border-radius: 5px;
+    display: none;
+    left: 0;
+    max-height: 300px;
+    overflow-y: auto;
+    position: absolute;
+    top: calc(100% + 6px);
+    width: 100%;
+    z-index: 2;
+}
+
+.dropdown-content.show{
+    display: block;
+}
+
+.dropdown-content a{
+    border-bottom: 1px solid var(--color-light-border);
+    color: var(--color-dark-text);
+    display: block;
+    padding: 10px 12px;
+    text-decoration: none;
+}
+
+.dropdown-content a:hover{
+    background-color: var(--color-light-hover);
 }
 
 @media (max-width: 700px){
@@ -156,5 +223,9 @@ h1{
         margin: 16px 0 0;
         align-items: flex-start;
         width: 100%;
+    }
+
+    .dropdown{
+        width: min(100%, 240px);
     }
 }

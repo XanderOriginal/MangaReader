@@ -3,9 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <% 
+        let titleObj = mangaData.data.attributes.title || {};
+        let mangaTitle = titleObj.en || Object.values(titleObj)[0] || "No name available";
+
+        let descriptionObj = mangaData.data.attributes.description || {};
+        let cleanDesc = descriptionObj.en || Object.values(descriptionObj)[0] || "No description available.";
+        cleanDesc = cleanDesc.split("---")[0].split("**")[0].split("[Official")[0].trim();
+
+        let tags = (mangaData.data.attributes.tags || [])
+            .filter(tag => tag.attributes.group === "genre" || tag.attributes.group === "theme")
+            .map(tag => tag.attributes.name.en)
+            .slice(0, 5);
+
+        let contentRating = mangaData.data.attributes.contentRating || "unknown";
+    %>
+    <title><%= mangaTitle %> | MangaReader</title>
+    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="/styles/manga.css">
 </head>
-<body>
-    
+<body class="manga-page">
+    <header class="manga-header">
+        <a class="back-link" href="/">&larr; Back to library</a>
+        <span class="page-label">MangaReader / Title details</span>
+    </header>
+
+    <main class="manga-detail">
+        <section class="manga-hero">
+            <div class="manga-cover-area">
+            <% 
+                let coverFileName = "";
+                mangaData.data.relationships.forEach((rel) => {
+                    if (rel.type === "cover_art" && rel.attributes) {
+                        coverFileName = rel.attributes.fileName;
+                    }
+                });
+            %>
+            
+        
+            <% if (coverFileName) { %>
+                <img src="https://uploads.mangadex.org/covers/<%= mangaData.data.id %>/<%= coverFileName %>" alt="Cover of <%= mangaTitle %>">
+            <% } else { %>
+                <div class="cover-placeholder">No cover available</div>
+            <% } %>
+            </div>
+            <div class="manga-info manga-detail-info">
+                <p class="eyebrow">Manga profile</p>
+                <h1><%= mangaTitle %></h1>
+                <div class="metadata-row">
+                    <span class="rating-badge"><%= contentRating %></span>
+                    <span><%= chaptersData && chaptersData.data ? chaptersData.data.length : 0 %> chapters</span>
+                </div>
+                <div class="tag-list">
+                    <% if (tags.length) { %>
+                        <% tags.forEach(tag => { %><span><%= tag %></span><% }); %>
+                    <% } else { %>
+                        <span>No tags available</span>
+                    <% } %>
+                </div>
+                <p class="hero-summary"><%= cleanDesc.replace(/\s+/g, " ").slice(0, 420) %><%= cleanDesc.length > 420 ? "..." : "" %></p>
+            </div>
+        </section>
+
+        
+        <section class="manga-section chapters-section">
+            <div class="section-heading chapter-heading">
+                <div>
+                    <p class="eyebrow">Start reading</p>
+                    <h2>Chapters</h2>
+                </div>
+                <div class="dropdown">
+                    <button id="dropdown-btn" type="button">Select chapter <span>&darr;</span></button>
+                    <div id="dropdown-content" class="dropdown-content">
+                        <% if (chaptersData && chaptersData.data && chaptersData.data.length > 0) { %>
+                            <% chaptersData.data.forEach(chapter => { %>
+                                <% let chapNum = chapter.attributes.chapter ? `Ch. ${chapter.attributes.chapter}` : "Oneshot"; %>
+                                <% let chapTitle = chapter.attributes.title ? ` - ${chapter.attributes.title}` : ""; %>
+                                <% let chapterLanguage = chapter.attributes.translatedLanguage || "unknown"; %>
+                                <a href="/read/<%= chapter.id %>"><%= chapNum %><%= chapTitle %> <small><%= chapterLanguage %></small></a>
+                            <% }); %>
+                        <% } else { %>
+                            <span class="empty-chapters">No chapters available</span>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+            <div class="chapter-grid">
+                <% if (chaptersData && chaptersData.data && chaptersData.data.length > 0) { %>
+                    <% chaptersData.data.forEach(chapter => { %>
+                        <% let chapNum = chapter.attributes.chapter ? `Chapter ${chapter.attributes.chapter}` : "Oneshot"; %>
+                        <% let chapTitle = chapter.attributes.title || "Read this chapter"; %>
+                        <a class="chapter-item" href="/read/<%= chapter.id %>">
+                            <span><%= chapNum %></span>
+                            <strong><%= chapTitle %></strong>
+                            <small><%= chapter.attributes.translatedLanguage || "unknown" %> <b>&rarr;</b></small>
+                        </a>
+                    <% }); %>
+                <% } else { %>
+                    <p class="empty-chapters">No chapters available yet.</p>
+                <% } %>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const dropdownButton = document.querySelector("#dropdown-btn");
+        const dropdownContent = document.querySelector("#dropdown-content");
+
+        dropdownButton.addEventListener("click", () => {
+            dropdownContent.classList.toggle("show");
+        });
+
+        document.addEventListener("click", (event) => {
+            if (!event.target.closest(".dropdown")) {
+                dropdownContent.classList.remove("show");
+            }
+        });
+    </script>
 </body>
 </html>
